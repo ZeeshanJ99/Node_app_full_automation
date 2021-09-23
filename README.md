@@ -15,6 +15,7 @@ Create Diagram for each part of the SDLC as well as project Diagram
 --------------------------------------------------------------------------
 
 ## Viktor, Sacha and Michael - Iac - Create a playbook to set up Grafana on EC2
+- Create instance with Terraform
 - Create playbook.yml to set up grafana. Ansible
 - send to automation team
 
