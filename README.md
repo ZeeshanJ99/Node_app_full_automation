@@ -7,7 +7,7 @@ Create Diagram for each part of the SDLC as well as project Diagram
 
 
 ## Kieron, Akunma, Amy - Automation with Jenkins Gatling Testing - needs to build a Jenkins server with required plugins/dependencies - Delete jobs in Jenkins - leave three successful jobs
-
+- Hello!
 - Jenkins server in Ireland with plugins and dependencies needing
 - Gatling testing and monitoring
 - Get stuff off other teams to make the jenkins automation server
