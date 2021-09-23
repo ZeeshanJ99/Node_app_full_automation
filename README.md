@@ -28,6 +28,8 @@ Create Diagram for each part of the SDLC as well as project Diagram
 
 -----------------------------------------------------------------------------
 
+## Make a diagram for each team then will join together
+
 # GOAL IS AUTOMATION
 <img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
 
