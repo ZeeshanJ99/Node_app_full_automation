@@ -1,3 +1,3 @@
-# Node_app_full_automation (Zeeshan is a poo-head)
+# Node App Full Automation
 
 <img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
