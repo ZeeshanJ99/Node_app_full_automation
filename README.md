@@ -1,6 +1,6 @@
 # Node App Full Automation
 
-Create a New Repo for this project
+Create a New Repo for this project connect
 each team to have a branch
 Ensure to add README.md for each part of SDLC
 Create Diagram for each part of the SDLC as well as project Diagram
