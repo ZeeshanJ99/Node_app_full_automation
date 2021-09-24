@@ -1,3 +1,6 @@
+![image](https://user-images.githubusercontent.com/88186084/134664236-cd337df5-63fe-4162-84ea-c85a678d2f78.png)
+
+
 # Node App Full Automation
 
 1. Create a New Repo for this project 
@@ -124,5 +127,3 @@ This is where the details go
 
 # GOAL IS AUTOMATION
 <img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
-
-
