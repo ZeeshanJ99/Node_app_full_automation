@@ -5,6 +5,7 @@ provider "aws" {
 }
 
 ###########################################################################
+###########################################################################
 resource "aws_cloudwatch_dashboard" "main_dashboard" {
     dashboard_name = "sre_Week-9_project"
 
@@ -22,11 +23,10 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                     [
                         "AWS/EC2",
                         "CPUUtilization",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg"
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
                     ]
                     ],
-                    "period":300,
+                    "period":10,
                     "stat":"Average",
                     "region":"eu-west-1",
                     "title":"App's Average CPU",
@@ -48,17 +48,15 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                     [
                         "AWS/EC2",
                         "NetworkIn",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg"
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
                     ],
                     [
                         "AWS/EC2",
                         "NetworkOut",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg"
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
                     ]
                     ],
-                    "period":300,
+                    "period":10,
                     "stat":"Average",
                     "region":"eu-west-1",
                     "title":"App's Average Network",
@@ -78,20 +76,18 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                 "properties":{
                     "metrics":[
                     [
-                        "AWS/AutoScalingGroup",
+                        "AWS/AutoScaling",
                         "GroupTotalInstances",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg"
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
                     ],
                     [
-                        "AWS/AutoScalingGroup",
+                        "AWS/AutoScaling",
                         "GroupPendingInstances",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg"
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
                     ]
                     ],
-                    "period":300,
-                    "stat":"Average",
+                    "period":10,
+                    "stat":"Sum",
                     "region":"eu-west-1",
                     "title":"No. of Instances",
                     "liveData": true,
@@ -111,15 +107,12 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                     "metrics":[
                     [
                         "AWS/ApplicationELB",
-                        "RequestCount"
-                    ],
-                    [
-                        "AWS/ApplicationELB",
-                        "RequestCountPerTarget"
+                        "RequestCount",
+                        "LoadBalancer", "app/sre-viktor-tf-lb/6f960e621f71b49b"
                     ]
                     ],
-                    "period":300,
-                    "stat":"Average",
+                    "period":10,
+                    "stat":"Sum",
                     "region":"eu-west-1",
                     "title":"Request Count",
                     "liveData": true,
@@ -138,22 +131,15 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                 "properties":{
                     "metrics":[
                     [
-                        "AWS/EC2",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg",
-                        "DiskReadOps"
+                        "AWS/ApplicationELB",
+                        "RequestCountPerTarget",
+                        "TargetGroup", "targetgroup/sre-viktor-tf-tg/782b939744f814c1"
+                    ]
                     ],
-                    [
-                        "AWS/EC2",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg",
-                        "DiskWriteOps"
-                    ],
-                    ],
-                    "period":300,
-                    "stat":"Average",
+                    "period":10,
+                    "stat":"Sum",
                     "region":"eu-west-1",
-                    "title":"Read/Write Ops",
+                    "title":"Request Count Per Target",
                     "liveData": true,
                     "legend": {
                         "position": "right"
@@ -171,18 +157,46 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                     "metrics":[
                     [
                         "AWS/EC2",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg",
-                        "DiskReadBytes"
+                        "DiskReadOps",
+                        "AutoScalingGroupName", "sre-viktor-tf-asg",
                     ],
                     [
                         "AWS/EC2",
-                        "AutoScalingGroupName",
-                        "sre-viktor-tf-asg",
-                        "DiskWriteBytes"
+                        "DiskWriteOps",
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
                     ],
                     ],
-                    "period":300,
+                    "period":10,
+                    "stat":"Average",
+                    "region":"eu-west-1",
+                    "title":"Read/Write Ops",
+                    "liveData": true,
+                    "legend": {
+                        "position": "right"
+                    }
+                
+                }
+            },
+            {
+                "type":"metric",
+                "x":0,
+                "y":6,
+                "width":24,
+                "height":6,
+                "properties":{
+                    "metrics":[
+                    [
+                        "AWS/EC2",
+                        "DiskReadBytes",
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
+                    ],
+                    [
+                        "AWS/EC2",
+                        "DiskWriteBytes",
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
+                    ],
+                    ],
+                    "period":10,
                     "stat":"Average",
                     "region":"eu-west-1",
                     "title":"Read/Write Bytes",
