@@ -40,7 +40,7 @@ New key for server (SRE_JENKINS_SERVER)
 
 Launch and ssh
 
-(Create a new SSH key for webhook)
+Install all the desired plugins - go to Manage Jenkins then click Plugins manager
 
 
 We have to communicate with other teams to make the complete Jenkins automation server.
@@ -53,7 +53,7 @@ We have to communicate with other teams to make the complete Jenkins automation 
 <details>
 <summary>GitHub Communication and Merging</summary>
 <br>
-This is where the details go
+(Create a new SSH key for webhook)
 </details>
 
 <br>
