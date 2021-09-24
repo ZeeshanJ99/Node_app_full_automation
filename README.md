@@ -86,7 +86,7 @@ We have to communicate with other teams to make the complete Jenkins automation 
         - give key name and select key from credientials
 
         **Branch Specifier:**
-        */dev
+        */Jenkins
     - ***Execute Shell***
     ```bash
     cd app
@@ -94,7 +94,18 @@ We have to communicate with other teams to make the complete Jenkins automation 
     npm test
     ```
 
-4. 
+4. To merge the changes, create a new job with same settings.
+
+Change/Edit the following sections - 
+**Additional Behaviours:**
+*Merge before build*:
+- Name of repostiory: origin
+- Branch to merge to: main
+
+**Post-build Actions:**
+*Git publisher:*
+- Select: Push only if build succeeds
+- Select: Merge results
 
 </details>
 
