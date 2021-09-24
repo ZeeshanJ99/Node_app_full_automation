@@ -41,27 +41,9 @@ Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in Lon
 - SSH Agent
 > If they're not installed, then we need to add them
 
-### Working steps (ROUGH NOTES):
-
-Go to London and find the desired AMI 
-
-Copy over AMI to Ireland
-
-Because it is an AMI all the installation should be complete
-
 (If you want to know how set it up from scatch, look here: https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
 
-Allow all access in security group
-port 80, 22, 80, 22
-
-Medium server to account for all the plugins
-
-New key for server (SRE_JENKINS_SERVER)
-
-Launch and ssh
-
-(Create a new SSH key for webhook)
-
+(Create a new SSH key for webhook?)
 
 We have to communicate with other teams to make the complete Jenkins automation server.
 
