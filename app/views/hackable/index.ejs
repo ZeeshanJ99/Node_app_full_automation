@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Provisioning Test Page</title>
+  <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+  <style type="text/css">
+    body {
+      text-align:center;
+      font-family: 'Slabo 27px', serif;
+      height:100vh;
+    }
+
+    .vertical-center {
+
+      position:relative;
+      top:50%;
+      transform: translateY(-50%);
+
+    }
+
+    img {
+      width:100px;
+    }
+
+    #command {
+      width:50%;
+      display: inline-block; 
+    }
+
+    #stdout {
+      width:50%;
+      display: inline-block; 
+    }
+  </style>
+</head>
+<body>
+  <div class="vertical-center">
+
+    <img src="/images/logo.png" />
+    <h1>Hackable: Code Injection</h1>
+
+    <p>The following command was run on the server!</p>
+    <code id="command">
+      <%= command %>
+    </code>
+    <p>This was the result</p>
+    <code id="stdout">
+      <%= stdout %>
+    </code>
+  </div>
+</body>
+</html>
