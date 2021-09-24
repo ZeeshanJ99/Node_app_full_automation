@@ -26,8 +26,17 @@ Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in Lon
 6. Create a new security group that allows all access on ports `22`, `80`, and `8080`.  
 7. Create a new key pair for the instance, and save the file. Then click `Launch`.  
 8. To see the Jenkins login page, copy the IP into your browser with `:8080` at the end. Username: `devopslondon`, password: `DevOpsAdmin`.  
- - After creating the server, we should check the plugins already available
- - If they're not installed, then we need to add plugins for Gatling, Ansible and Terraform
+- After creating the server, we should check the plugins already available  
+### For our project we need certain plugins:
+- Gatling
+- Ansible
+- Terraform
+- Amazon EC2
+- Git
+- Github
+- Credentials
+- SSH Agent
+> If they're not installed, then we need to add them
 
 ### Working steps (ROUGH NOTES):
 
