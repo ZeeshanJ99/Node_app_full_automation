@@ -89,6 +89,7 @@ This is where the details go
 ---
 
 ## Viktor, Sacha and Michael - Iac - Create a playbook to set up Grafana on EC2
+- Create instance with Terraform
 - Create playbook.yml to set up grafana. Ansible
 - send to automation team
 
