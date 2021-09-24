@@ -1,3 +1,6 @@
+![image](https://user-images.githubusercontent.com/88186084/134664236-cd337df5-63fe-4162-84ea-c85a678d2f78.png)
+
+
 # Node App Full Automation
 
 1. Create a New Repo for this project 
@@ -85,14 +88,14 @@ This is where the details go
 
 <br>
 
----
+----------------------
 
 ## Viktor, Sacha and Michael - Iac - Create a playbook to set up Grafana on EC2
 - Create instance with Terraform
 - Create playbook.yml to set up grafana. Ansible
 - send to automation team
 
----
+------------------------
 
 ## William, Ioana, Zeeshan - Monitoring with Cloud Watch - SNS - Grafana Dashboard
 - Make a CW
@@ -100,11 +103,13 @@ This is where the details go
 - Produce Grafana dashboard
 - show automation team
 
----
+Cloudwatch
+![image](https://user-images.githubusercontent.com/88316648/134687460-b6a2d236-174f-4618-af63-eb445f19a16b.png)
+
+-----------------------------------------------------------------------------
+
 
 ## Make a diagram for each team then will join together
 
 # GOAL IS AUTOMATION
 <img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
-
-
