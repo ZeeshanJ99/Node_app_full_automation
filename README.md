@@ -16,8 +16,16 @@ each team to have a branch
 
 <br>
 
-Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in London
- - We must make sure the the server is NOT **t2micro** because we need a bigger server (**medium** should be good)
+Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in London:  
+1. In AWS Control Panel, change your location to London.  
+2. Navigate to the `SRE_Shahrukh_jenkins_08/08/2021_working` EC2 instance, and make an AMI from this instance.  
+3. Navigate to the new AMI, and click `Actions` -> `Copy AMI`. Set the Destination region to `Ireland`, rename the AMI, and click `Copy AMI`.  
+4. Switch the region back to Ireland, select your copied AMI, and click `Launch`.  
+ - We must make sure the the server is NOT **t2.micro** because we need a bigger server (**t2.medium** should be good)
+5. Use the `default` VPC, and `eu-west-1a` subnet.  
+6. Create a new security group that allows all access on ports `22`, `80`, and `8080`.  
+7. Create a new key pair for the instance, and save the file. Then click `Launch`.  
+8. To see the Jenkins login page, copy the IP into your browser with `:8080` at the end. Username: `devopslondon`, password: `DevOpsAdmin`.  
  - After creating the server, we should check the plugins already available
  - If they're not installed, then we need to add plugins for Gatling, Ansible and Terraform
 
