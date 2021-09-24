@@ -19,7 +19,8 @@ each team to have a branch
 
 <br>
 
-Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in London:  
+### Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in London:
+
 1. In AWS Control Panel, change your location to London.  
 2. Navigate to the `SRE_Shahrukh_jenkins_08/08/2021_working` EC2 instance, and make an AMI from this instance.  
 3. Navigate to the new AMI, and click `Actions` -> `Copy AMI`. Set the Destination region to `Ireland`, rename the AMI, and click `Copy AMI`.  
@@ -55,7 +56,46 @@ We have to communicate with other teams to make the complete Jenkins automation 
 <details>
 <summary>GitHub Communication and Merging</summary>
 <br>
-This is where the details go
+
+1. Create a new SSH key for webhook
+2. Go to repo and go to settings
+    - In settings, go to Webhooks
+    - The payload URL is: `Jenkins environment URL` + `/github-webhook/`
+    - Content type: application/json
+    - No Secrets
+    - Events: Send Me Everything
+3. Create a new item in Jenkins:
+    - Submit a name and select `Freestyle Project`
+    - In the next menu; `Discard old builds` --> keep 3 interations
+    - Github project --> input HTTPS from `Code` section of Git repository
+    - ***Source Code Management:***
+        **Git**
+        - Repository URL --> `SSH` for Github repo
+        - Credentials --> add private key from ssh folder (one *without* any extentions, should look like this, make sure to incude everything):
+        ```bash
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        00000000000000000000000
+        ...
+        00000000000000000000000
+        -----END OPENSSH PRIVATE KEY-----
+        ```
+        
+        Kind: **SSH username w private key**
+        
+        Add a description
+        - give key name and select key from credientials
+
+        **Branch Specifier:**
+        */dev
+    - ***Execute Shell***
+    ```bash
+    cd app
+    npm install
+    npm test
+    ```
+
+4. 
+
 </details>
 
 <br>
