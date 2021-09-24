@@ -29,6 +29,9 @@ Create Diagram for each part of the SDLC as well as project Diagram
 - Produce Grafana dashboard
 - show automation team
 
+![image](https://user-images.githubusercontent.com/88316648/134687460-b6a2d236-174f-4618-af63-eb445f19a16b.png)
+
+
 -----------------------------------------------------------------------------
 
 ## Make a diagram for each team then will join together
