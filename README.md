@@ -8,7 +8,7 @@ each team to have a branch
 
 ---
 
-## Kieron, Akunma, Amy - **Automation with Jenkins**
+## [Kieron](https://github.com/sc18kg), [Akunma](https://github.com/andujiuba), [Amy](https://github.com/am93596) - **Automation with Jenkins**
 
 ### Gatling Testing - needs to build a Jenkins server with required plugins/dependencies - 
 
@@ -29,11 +29,34 @@ Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in Lon
  - After creating the server, we should check the plugins already available
  - If they're not installed, then we need to add plugins for Gatling, Ansible and Terraform
 
-We have to communicate with other teams to make the Jenkins automation server.
+### Working steps (ROUGH NOTES):
+
+Go to London and find the desired AMI 
+
+Copy over AMI to Ireland
+
+Because it is an AMI all the installation should be complete
+
+(If you want to know how set it up from scatch, look here: https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
+
+Allow all access in security group
+port 80, 22, 80, 22
+
+Medium server to account for all the plugins
+
+New key for server (SRE_JENKINS_SERVER)
+
+Launch and ssh
+
+(Create a new SSH key for webhook)
+
+
+We have to communicate with other teams to make the complete Jenkins automation server.
 
 <br>
 
-The jobs that will be built in Jenkins (*Click to expand*):
+### The jobs that will be built in Jenkins (*Click to expand*):
+<br>
 
 <details>
 <summary>GitHub Communication and Merging</summary>
