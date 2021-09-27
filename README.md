@@ -199,11 +199,6 @@ variable "aws_key_path" {
 variable "subnet_public_id" {
     default = "subnet-0429d69d55dfad9d2"
 }
-
-# Security Group ID
-variable "sre_security_group_grafana_id" {
-    default = "sg-0b68c85c8877c69e1"
-}
 ```
 
 In your main.tf file:
@@ -217,8 +212,8 @@ provider "aws" {
 - Set up security group with port 3000 access
 ```
 resource "aws_security_group" "sre_security_group_grafana"  {
-  name = "sre_security_group_grafana_id"
-  description = "sre_security_group_grafana_id"
+  name = "sre_security_group_grafana"
+  description = "sre_security_group_grafana"
   vpc_id = var.vpc_id # attaching the SG with your own VPC
   ingress {
     from_port       = "80"
@@ -255,7 +250,7 @@ resource "aws_security_group" "sre_security_group_grafana"  {
 resource "aws_instance" "sre_grafana_terraform" {
   ami =  var.ami_grafana_id
   subnet_id = var.subnet_public_id
-  vpc_security_group_ids = [aws_security_group.sre_security_group_grafana_id.id]
+  vpc_security_group_ids = [aws_security_group.sre_security_group_grafana.id]
   instance_type = "t2.micro"
   associate_public_ip_address = true
   key_name = var.aws_key_name

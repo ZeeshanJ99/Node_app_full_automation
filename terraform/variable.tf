@@ -20,9 +20,3 @@ variable "subnet_public_id" {
     default = "subnet-0429d69d55dfad9d2"
 
 }
-
-variable "sre_security_group_grafana_id" {
-
-    default = "sg-0b68c85c8877c69e1"
-
-}
