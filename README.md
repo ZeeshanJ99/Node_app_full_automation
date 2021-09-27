@@ -117,29 +117,28 @@ Change/Edit the following sections -
 (Make sure you have the key that is being used for the EC2 instance)
 
 1. Create a new item using (almost) the same settings as the GitHub items
-    - ### ***Source Code Management:***
-    **Branches to Build:** 
-    *Branch Specifier:* 
-    `*/main`
-    - ### ***Build Environment:***
-    **SSH Agent: Credentials**
-    `Specific Credentials` - Use the key that is connected to ec2 instances
-    - 
-    ```bash
-    ssh -A -o "StrictHostKeyChecking=no" ubuntu@54.216.84.250 <<" EOF
-    killall node
-    rm -rf Node_app_full_automation
-    git clone https://github.com/ZeeshanJ99/Node_app_full_automation.git
-    cd Node_app_full_automation/environment/app
-    sudo chmod +x provision.sh
-    ./provision.sh
-    export DB_HOST=10.99.2.194:27017/posts/
-    cd ~/Node_app_full_automation/app
-    npm install
-    node seeds/seed.js
-    nohup node app.js > /dev/null 2>&1 &
-    EOF
-    ```
+### ***Source Code Management:***
+**Branches to Build:** 
+*Branch Specifier:* 
+`*/main`
+- ### ***Build Environment:***
+**SSH Agent: Credentials**
+`Specific Credentials` - Use the key that is connected to ec2 instances
+```bash
+ssh -A -o "StrictHostKeyChecking=no" ubuntu@54.216.84.250 <<" EOF
+killall node
+rm -rf Node_app_full_automation
+git clone https://github.com/ZeeshanJ99/Node_app_full_automation.git
+cd Node_app_full_automation/environment/app
+sudo chmod +x provision.sh
+./provision.sh
+export DB_HOST=10.99.2.194:27017/posts/
+cd ~/Node_app_full_automation/app
+npm install
+node seeds/seed.js
+nohup node app.js > /dev/null 2>&1 &
+EOF
+```
 3. 
 
 </details>
