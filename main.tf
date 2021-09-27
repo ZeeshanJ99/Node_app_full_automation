@@ -211,3 +211,30 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
     }
     )
 }
+
+###########################################################################
+###########################################################################
+# //SNS Setup\\
+resource "aws_sns_topic" "sre_ASG_alerts" {
+    name = "sre_ASG_alerts"
+}
+
+resource "aws_sns_topic_subscription" "sre_ASG_subscription" {
+    topic_arn = aws_sns_topic.sre_ASG_alerts.arn
+    protocol = "email"
+    endpoint = "wmoorby@spartaglobal.com"
+}
+
+resource "aws_autoscaling_notification" "ASG_notifications" {
+    group_names = ["sre_viktor_asg_tf"]
+
+    notifications = [
+        "autoscaling:EC2_INSTANCE_LAUNCH",
+        "autoscaling:EC2_INSTANCE_TERMINATE",
+        "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+        "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+    ]
+
+    topic_arn = aws_sns_topic.sre_ASG_alerts.arn
+}
+
