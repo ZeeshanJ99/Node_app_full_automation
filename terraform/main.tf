@@ -158,7 +158,7 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                     [
                         "AWS/ApplicationELB",
                         "RequestCount",
-                        "LoadBalancer", "app/sre-viktor-tf-lb/6f960e621f71b49b"
+                        "LoadBalancer", "app/sre-viktor-tf-lb/7340e32a89c42d83"
                     ]
                     ],
                     "period":10,
@@ -183,7 +183,7 @@ resource "aws_cloudwatch_dashboard" "main_dashboard" {
                     [
                         "AWS/ApplicationELB",
                         "RequestCountPerTarget",
-                        "TargetGroup", "targetgroup/sre-viktor-tf-tg/782b939744f814c1"
+                        "TargetGroup", "targetgroup/sre-viktor-tf-tg/338baa6963fbd5a8"
                     ]
                     ],
                     "period":10,
@@ -272,7 +272,7 @@ resource "aws_sns_topic" "sre_ASG_alerts" {
 resource "aws_sns_topic_subscription" "sre_ASG_subscription" {
     topic_arn = aws_sns_topic.sre_ASG_alerts.arn
     protocol = "email"
-    endpoint = "wmoorby@spartaglobal.com"
+    endpoint = "johnsmith@gmail.com"
 }
 
 resource "aws_autoscaling_notification" "ASG_notifications" {
