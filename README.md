@@ -126,7 +126,7 @@ Change/Edit the following sections -
     `Specific Credentials` - Use the key that is connected to ec2 instances
     - 
     ```bash
-    ssh -A -o "StrictHostKeyChecking=no" ubuntu@54.216.84.250 << EOF
+    ssh -A -o "StrictHostKeyChecking=no" ubuntu@54.216.84.250 <<" EOF
     killall node
     rm -rf Node_app_full_automation
     git clone https://github.com/ZeeshanJ99/Node_app_full_automation.git
