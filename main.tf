@@ -226,7 +226,7 @@ resource "aws_sns_topic_subscription" "sre_ASG_subscription" {
 }
 
 resource "aws_autoscaling_notification" "ASG_notifications" {
-    group_names = ["sre_viktor_asg_tf"]
+    group_names = ["sre-viktor-tf-asg"]
 
     notifications = [
         "autoscaling:EC2_INSTANCE_LAUNCH",
