@@ -247,6 +247,49 @@ resource "aws_instance" "sre_grafana_terraform" {
 ### Create an Ansible playbook to set up Grafana
 ### Add details of the target instance:
 
+```
+[grafana]
+grafana_instance ansible_host=IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/sre_SDMTVM_key.pem
+```
+
+### Playbook:
+```
+---
+- hosts: grafana
+  become: true
+
+  tasks:
+  - name: Install nessesary package
+    apt:
+        name: apt-transport-https
+        state: present
+        update_cache: yes
+
+  - name: add grafana gpg key
+    shell: curl https://packages.grafana.com/gpg.key | sudo apt-key add -
+
+  - name: add grafana repo
+    apt_repository:
+      repo: deb https://packages.grafana.com/oss/deb stable main
+      state: present
+      filename: grafana
+
+  - name: Install grafana
+    apt:
+        name: grafana
+        state: present
+        update_cache: yes
+
+  - name: Enable and start grafana service
+    service:
+      name: grafana-server
+      enabled: yes
+      state: started
+
+```
+
+---
+
 ------------------------
 
 ## William, Ioana, Zeeshan - Monitoring with Cloud Watch - SNS - Grafana Dashboard
