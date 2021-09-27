@@ -19,7 +19,8 @@ each team to have a branch
 
 <br>
 
-Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in London:  
+### Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in London:
+
 1. In AWS Control Panel, change your location to London.  
 2. Navigate to the `SRE_Shahrukh_jenkins_08/08/2021_working` EC2 instance, and make an AMI from this instance.  
 3. Navigate to the new AMI, and click `Actions` -> `Copy AMI`. Set the Destination region to `Ireland`, rename the AMI, and click `Copy AMI`.  
@@ -41,27 +42,9 @@ Firstly we need to build a Jenkins server in Ireland from the Jenkins AMI in Lon
 - SSH Agent
 > If they're not installed, then we need to add them
 
-### Working steps (ROUGH NOTES):
-
-Go to London and find the desired AMI 
-
-Copy over AMI to Ireland
-
-Because it is an AMI all the installation should be complete
-
 (If you want to know how set it up from scatch, look here: https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
 
-Allow all access in security group
-port 80, 22, 80, 22
-
-Medium server to account for all the plugins
-
-New key for server (SRE_JENKINS_SERVER)
-
-Launch and ssh
-
-(Create a new SSH key for webhook)
-
+(Create a new SSH key for webhook?)
 
 We have to communicate with other teams to make the complete Jenkins automation server.
 
@@ -73,7 +56,57 @@ We have to communicate with other teams to make the complete Jenkins automation 
 <details>
 <summary>GitHub Communication and Merging</summary>
 <br>
-This is where the details go
+
+1. Create a new SSH key for webhook
+2. Go to repo and go to settings
+    - In settings, go to Webhooks
+    - The payload URL is: `Jenkins environment URL` + `/github-webhook/`
+    - Content type: application/json
+    - No Secrets
+    - Events: Send Me Everything
+3. Create a new item in Jenkins:
+    - Submit a name and select `Freestyle Project`
+    - In the next menu; `Discard old builds` --> keep 3 interations
+    - Github project --> input HTTPS from `Code` section of Git repository
+    - ***Source Code Management:***
+        **Git**
+        - Repository URL --> `SSH` for Github repo
+        - Credentials --> add private key from ssh folder (one *without* any extentions, should look like this, make sure to incude everything):
+        ```bash
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        00000000000000000000000
+        ...
+        00000000000000000000000
+        -----END OPENSSH PRIVATE KEY-----
+        ```
+        
+        Kind: **SSH username w private key**
+        
+        Add a description
+        - give key name and select key from credientials
+
+        **Branch Specifier:**
+        */Jenkins
+    - ***Execute Shell***
+    ```bash
+    cd app
+    npm install
+    npm test
+    ```
+
+4. To merge the changes, create a new job with same settings.
+
+Change/Edit the following sections - 
+**Additional Behaviours:**
+*Merge before build*:
+- Name of repostiory: origin
+- Branch to merge to: main
+
+**Post-build Actions:**
+*Git publisher:*
+- Select: Push only if build succeeds
+- Select: Merge results
+
 </details>
 
 <br>
@@ -106,7 +139,7 @@ This is where the details go
 
 <br>
 
----
+----------------------
 
 ## Viktor, Sacha and Michael - Iac - Create a playbook to set up Grafana on EC2
 ### Create instance with Terraform
@@ -214,49 +247,7 @@ resource "aws_instance" "sre_grafana_terraform" {
 ### Create an Ansible playbook to set up Grafana
 ### Add details of the target instance:
 
-```
-[grafana]
-grafana_instance ansible_host=IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/sre_SDMTVM_key.pem
-```
-
-### Playbook:
-```
----
-- hosts: grafana
-  become: true
-
-  tasks:
-  - name: Install nessesary package
-    apt:
-        name: apt-transport-https
-        state: present
-        update_cache: yes
-
-  - name: add grafana gpg key
-    shell: curl https://packages.grafana.com/gpg.key | sudo apt-key add -
-
-  - name: add grafana repo
-    apt_repository:
-      repo: deb https://packages.grafana.com/oss/deb stable main
-      state: present
-      filename: grafana
-
-  - name: Install grafana
-    apt:
-        name: grafana
-        state: present
-        update_cache: yes
-
-  - name: Enable and start grafana service
-    service:
-      name: grafana-server
-      enabled: yes
-      state: started
-
-```
-
-
----
+------------------------
 
 ## William, Ioana, Zeeshan - Monitoring with Cloud Watch - SNS - Grafana Dashboard
 - Make a CW
@@ -264,10 +255,13 @@ grafana_instance ansible_host=IP ansible_user=ubuntu ansible_ssh_private_key_fil
 - Produce Grafana dashboard
 - show automation team
 
----
+Cloudwatch
+![image](https://user-images.githubusercontent.com/88316648/134687460-b6a2d236-174f-4618-af63-eb445f19a16b.png)
+
+-----------------------------------------------------------------------------
+
 
 ## Make a diagram for each team then will join together
 
 # GOAL IS AUTOMATION
-<img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
 <img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
