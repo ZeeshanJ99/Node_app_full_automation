@@ -199,11 +199,6 @@ variable "aws_key_path" {
 variable "subnet_public_id" {
     default = "subnet-0429d69d55dfad9d2"
 }
-
-# Security Group ID
-variable "sre_security_group_grafana_id" {
-    default = "sg-0b68c85c8877c69e1"
-}
 ```
 
 In your main.tf file:
@@ -217,8 +212,8 @@ provider "aws" {
 - Set up security group with port 3000 access
 ```
 resource "aws_security_group" "sre_security_group_grafana"  {
-  name = "sre_security_group_grafana_id"
-  description = "sre_security_group_grafana_id"
+  name = "sre_security_group_grafana"
+  description = "sre_security_group_grafana"
   vpc_id = var.vpc_id # attaching the SG with your own VPC
   ingress {
     from_port       = "80"
@@ -255,7 +250,7 @@ resource "aws_security_group" "sre_security_group_grafana"  {
 resource "aws_instance" "sre_grafana_terraform" {
   ami =  var.ami_grafana_id
   subnet_id = var.subnet_public_id
-  vpc_security_group_ids = [aws_security_group.sre_security_group_grafana_id.id]
+  vpc_security_group_ids = [aws_security_group.sre_security_group_grafana.id]
   instance_type = "t2.micro"
   associate_public_ip_address = true
   key_name = var.aws_key_name
@@ -275,7 +270,54 @@ resource "aws_instance" "sre_grafana_terraform" {
 ### Create an Ansible playbook to set up Grafana
 ### Add details of the target instance:
 
+```
+[grafana]
+grafana_instance ansible_host=IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/sre_SDMTVM_key.pem
+```
+
+### Playbook:
+```
+---
+- hosts: grafana
+  become: true
+
+  tasks:
+  - name: Install nessesary package
+    apt:
+        name: apt-transport-https
+        state: present
+        update_cache: yes
+
+  - name: add grafana gpg key
+    shell: curl https://packages.grafana.com/gpg.key | sudo apt-key add -
+
+  - name: add grafana repo
+    apt_repository:
+      repo: deb https://packages.grafana.com/oss/deb stable main
+      state: present
+      filename: grafana
+
+  - name: Install grafana
+    apt:
+        name: grafana
+        state: present
+        update_cache: yes
+
+  - name: Enable and start grafana service
+    service:
+      name: grafana-server
+      enabled: yes
+      state: started
+
+```
+
+---
+
 ------------------------
+
+![mvs](https://user-images.githubusercontent.com/17476059/134884864-49c1179c-9e11-4c44-8d00-74af94da13db.png)
+
+
 
 ## William, Ioana, Zeeshan - Monitoring with Cloud Watch - SNS - Grafana Dashboard
 - Make a CW
@@ -293,3 +335,123 @@ Cloudwatch
 
 # GOAL IS AUTOMATION
 <img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
+
+
+
+---
+
+## Creating a CloudWatch dashboard with Terraform
+
+Creating a Cloudwatch dashboard with Terraform is quite simple, populating it with widgets however, is slightly more complicated.
+
+To create a dashboard, we need a dashboard name and a dashboard body
+```terraform
+resource "aws_cloudwatch_dashboard" "main_dashboard" {
+    dashboard_name = "sre_Week-9_project"
+
+    dashboard_body =
+```
+
+The method for adding widgets to the dashboard is
+- Define the type of widget to add
+- Define the dimensions of the widget
+- Define the properties of the widget (depending on widget type)
+
+For metric options, you must define:
+- The "Namespace" that the metric is in. For example, to use a metric for an EC2 instance, the namespace is `AWS/EC2`.
+- The metric to be measured
+- Any dimensional refinements *(only measure EC2 metrics from a defined auto scaling group)*
+
+The rest of the metrics options are then defined, such as the "stat-type" (average, sum, maximum, minimum), the metric title, etc.
+
+Multiple metrics can be added to the same graph for easier comparison.
+
+**The `jsonencode()` method is required for code to work!!**
+
+```terraform
+dashboard_body = jsonencode(
+        {
+        "widgets": [
+            {
+                "type":"metric",
+                "x":0,
+                "y":0,
+                "width":24,
+                "height":6,
+                "properties":{
+                    "metrics":[
+                    [
+                        "AWS/EC2",
+                        "CPUUtilization",
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
+                    ]
+                    ],
+                    "period":10,
+                    "stat":"Average",
+                    "region":"eu-west-1",
+                    "title":"App's Average CPU",
+                    "liveData": true,
+                    "legend": {
+                        "position": "right"
+                    }
+                
+                }
+            })
+```
+
+List of namespaces, metric options and dimensions >> https://github.com/grafana/grafana/blob/main/pkg/tsdb/cloudwatch/metric_find_query.go#L73
+
+
+## Creating a SNS alerts with Terraform
+### Create a topic
+The only requirement for a topic is a topic name.
+```terraform
+resource "aws_sns_topic" "sre_ASG_alerts" {
+    name = "sre_ASG_alerts"
+}
+```
+
+### Create a topic subscription
+The requirements for a subscription are:
+1. A topic to link to *(using the `arn`)*
+2. The protocol of the subscription
+3. The endpoint of the subscription
+
+```terraform
+resource "aws_sns_topic_subscription" "sre_ASG_subscription" {
+    topic_arn = aws_sns_topic.sre_ASG_alerts.arn
+    protocol = "email"
+    endpoint = "johnsmith@gmail.com"
+}
+```
+
+### Create Auto Scaling alerts
+#### Manual creation
+To create Auto Scaling alerts manually:
+1. Go to "Auto Scaling Groups" on AWS and select your Auto Scaling group. 
+2. Go to the "Activity" tab and `Create notification` under "Activity notifications".
+3. Select the topic to connect with to send notifications.
+4. Choose the events that you would like to be notified about:
+
+![](./terraform/img/ASG_notification_events.PNG)
+
+#### Terraform creation
+To create Auto Scaling alerts using Terraform:
+1. Create an "aws_autoscaling_notification" resource
+2. Define the notifications you want to be alerted for.
+3. Define the topic that you want to be notified with
+
+```terraform
+resource "aws_autoscaling_notification" "ASG_notifications" {
+    group_names = ["sre-viktor-tf-asg"]
+
+    notifications = [
+        "autoscaling:EC2_INSTANCE_LAUNCH",
+        "autoscaling:EC2_INSTANCE_TERMINATE",
+        "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+        "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+    ]
+
+    topic_arn = aws_sns_topic.sre_ASG_alerts.arn
+}
+```
