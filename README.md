@@ -142,9 +142,110 @@ This is where the details go
 ----------------------
 
 ## Viktor, Sacha and Michael - Iac - Create a playbook to set up Grafana on EC2
-- Create instance with Terraform
-- Create playbook.yml to set up grafana. Ansible
-- send to automation team
+### Create instance with Terraform
+- Create a main.tf file and a variable.tf file
+
+In your variable.tf file, enter the following:
+```
+# ID for the default VPC
+variable "vpc_id" {
+  default = "vpc-07e47e9d90d2076da"
+}
+
+# AMI for Ubuntu 18.04
+variable "ami_grafana_id" {
+  default = "ami-0943382e114f188e8"
+}
+
+# Name of your AWS pem key
+variable "aws_key_name" {
+    default = "sre_SDMTVM_key"
+}
+
+# Path of your AWS pem key
+variable "aws_key_path" {
+    default = "~/.ssh/sre_SDMTVM_key.pem"
+}
+
+# Public subnet ID
+variable "subnet_public_id" {
+    default = "subnet-0429d69d55dfad9d2"
+}
+
+# Security Group ID
+variable "sre_security_group_grafana_id" {
+    default = "sg-0b68c85c8877c69e1"
+}
+```
+
+In your main.tf file:
+- Set up AWS as the provider by entering the following
+```
+provider "aws" {
+    region = "eu-west-1"
+
+}
+```
+- Set up security group with port 3000 access
+```
+resource "aws_security_group" "sre_security_group_grafana"  {
+  name = "sre_security_group_grafana_id"
+  description = "sre_security_group_grafana_id"
+  vpc_id = var.vpc_id # attaching the SG with your own VPC
+  ingress {
+    from_port       = "80"
+    to_port         = "80"
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]   
+  }
+  ingress {
+    from_port       = "22"
+    to_port         = "22"
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+    ingress {
+    from_port       = "3000"
+    to_port         = "3000"
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]  
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1" # allow all
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sre_security_group_grafana"
+  }
+}
+```
+- Set up your EC2 Instance
+```
+resource "aws_instance" "sre_grafana_terraform" {
+  ami =  var.ami_grafana_id
+  subnet_id = var.subnet_public_id
+  vpc_security_group_ids = [aws_security_group.sre_security_group_grafana_id.id]
+  instance_type = "t2.micro"
+  associate_public_ip_address = true
+  key_name = var.aws_key_name
+  connection {
+		type = "ssh"
+		user = "ubuntu"
+		private_key = var.aws_key_path
+		host = "${self.associate_public_ip_address}"
+	}
+  tags = {
+      Name = "sre_grafana_terraform"
+  }
+}
+```
+
+
+### Create an Ansible playbook to set up Grafana
+### Add details of the target instance:
 
 ------------------------
 
