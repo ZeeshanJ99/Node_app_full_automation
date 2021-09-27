@@ -312,3 +312,123 @@ Cloudwatch
 
 # GOAL IS AUTOMATION
 <img src = "https://media.giphy.com/media/HPA8CiJuvcVW0/giphy.gif?cid=ecf05e47eutm671cfw2o3f3zp46wdkjgxatkjm7qyflqdovb&rid=giphy.gif&ct=g">
+
+
+
+---
+
+## Creating a CloudWatch dashboard with Terraform
+
+Creating a Cloudwatch dashboard with Terraform is quite simple, populating it with widgets however, is slightly more complicated.
+
+To create a dashboard, we need a dashboard name and a dashboard body
+```terraform
+resource "aws_cloudwatch_dashboard" "main_dashboard" {
+    dashboard_name = "sre_Week-9_project"
+
+    dashboard_body =
+```
+
+The method for adding widgets to the dashboard is
+- Define the type of widget to add
+- Define the dimensions of the widget
+- Define the properties of the widget (depending on widget type)
+
+For metric options, you must define:
+- The "Namespace" that the metric is in. For example, to use a metric for an EC2 instance, the namespace is `AWS/EC2`.
+- The metric to be measured
+- Any dimensional refinements *(only measure EC2 metrics from a defined auto scaling group)*
+
+The rest of the metrics options are then defined, such as the "stat-type" (average, sum, maximum, minimum), the metric title, etc.
+
+Multiple metrics can be added to the same graph for easier comparison.
+
+**The `jsonencode()` method is required for code to work!!**
+
+```terraform
+dashboard_body = jsonencode(
+        {
+        "widgets": [
+            {
+                "type":"metric",
+                "x":0,
+                "y":0,
+                "width":24,
+                "height":6,
+                "properties":{
+                    "metrics":[
+                    [
+                        "AWS/EC2",
+                        "CPUUtilization",
+                        "AutoScalingGroupName", "sre-viktor-tf-asg"
+                    ]
+                    ],
+                    "period":10,
+                    "stat":"Average",
+                    "region":"eu-west-1",
+                    "title":"App's Average CPU",
+                    "liveData": true,
+                    "legend": {
+                        "position": "right"
+                    }
+                
+                }
+            })
+```
+
+List of namespaces, metric options and dimensions >> https://github.com/grafana/grafana/blob/main/pkg/tsdb/cloudwatch/metric_find_query.go#L73
+
+
+## Creating a SNS alerts with Terraform
+### Create a topic
+The only requirement for a topic is a topic name.
+```terraform
+resource "aws_sns_topic" "sre_ASG_alerts" {
+    name = "sre_ASG_alerts"
+}
+```
+
+### Create a topic subscription
+The requirements for a subscription are:
+1. A topic to link to *(using the `arn`)*
+2. The protocol of the subscription
+3. The endpoint of the subscription
+
+```terraform
+resource "aws_sns_topic_subscription" "sre_ASG_subscription" {
+    topic_arn = aws_sns_topic.sre_ASG_alerts.arn
+    protocol = "email"
+    endpoint = "johnsmith@gmail.com"
+}
+```
+
+### Create Auto Scaling alerts
+#### Manual creation
+To create Auto Scaling alerts manually:
+1. Go to "Auto Scaling Groups" on AWS and select your Auto Scaling group. 
+2. Go to the "Activity" tab and `Create notification` under "Activity notifications".
+3. Select the topic to connect with to send notifications.
+4. Choose the events that you would like to be notified about:
+
+![](./terraform/img/ASG_notification_events.PNG)
+
+#### Terraform creation
+To create Auto Scaling alerts using Terraform:
+1. Create an "aws_autoscaling_notification" resource
+2. Define the notifications you want to be alerted for.
+3. Define the topic that you want to be notified with
+
+```terraform
+resource "aws_autoscaling_notification" "ASG_notifications" {
+    group_names = ["sre-viktor-tf-asg"]
+
+    notifications = [
+        "autoscaling:EC2_INSTANCE_LAUNCH",
+        "autoscaling:EC2_INSTANCE_TERMINATE",
+        "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+        "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+    ]
+
+    topic_arn = aws_sns_topic.sre_ASG_alerts.arn
+}
+```
