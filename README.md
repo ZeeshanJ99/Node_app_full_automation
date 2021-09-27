@@ -292,6 +292,10 @@ grafana_instance ansible_host=IP ansible_user=ubuntu ansible_ssh_private_key_fil
 
 ------------------------
 
+![mvs](https://user-images.githubusercontent.com/17476059/134884864-49c1179c-9e11-4c44-8d00-74af94da13db.png)
+
+
+
 ## William, Ioana, Zeeshan - Monitoring with Cloud Watch - SNS - Grafana Dashboard
 - Make a CW
 - Make an SNS
